@@ -1,10 +1,29 @@
 ﻿<!DOCTYPE html>
 <html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+
 <head>
     <meta charset="utf-8" />
     <title></title>
 </head>
 <body>
+    <div ng-app="myApp" ng-controller="calculatorCtrl">
+
+        <table>
+            <tr ng-repeat="x in names">
+                <td>{{ x }}</td>
+
+            </tr>
+        </table>
+
+    </div>
+
+    <script>
+        var app = angular.module('myApp', []);
+        app.controller('calculatorCtrl', function ($scope) {
+            $scope.names = ["Joe", "Max", "Eric", "Kunsang"];
+        });
+    </script>
 
 </body>
 </html>
