@@ -8,7 +8,19 @@
 </head>
 <body>
     <div ng-app="myApp" ng-controller="calculatorCtrl">
+        <h2>Cashflow Calculator</h2>
 
+        Loan: <input type="double" ng-model="loan" value="100000">
+        Term: <input type="int" ng-model="term" value="360">
+        Rate: <input type="double" ng-model="rate" value=".04">
+
+        <table>
+            <th>Month</th>
+            <th>Interest</th>
+            <th>Principal</th>
+            <th>Rem Balance</th>
+
+        </table>
         <table>
             <tr ng-repeat="x in names">
                 <td>{{ x }}</td>
@@ -22,6 +34,16 @@
         var app = angular.module('myApp', []);
         app.controller('calculatorCtrl', function ($scope) {
             $scope.names = ["Joe", "Max", "Eric", "Kunsang"];
+            $scope.loans = [{
+                balance: "100000",
+                term: "360",
+                rate: ".04"
+            },
+            {
+                balance: "200000",
+                term: "360",
+                rate: ".03"
+            }];
         });
     </script>
 

@@ -7,7 +7,7 @@ using System.Web.Http;
 
 namespace CashflowCalculator.Controllers
 {
-    public class CalculatorController : ApiController
+    public class LoansController : ApiController
     {
     }
 }
