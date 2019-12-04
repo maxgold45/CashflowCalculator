@@ -1,8 +1,11 @@
 ﻿<!DOCTYPE html>
 <html>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
-
 <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    @model CashflowCalculator.Models.Loan
+    @{
+        ViewBag.Title = "index";
+    }
     <meta charset="utf-8" />
     <title></title>
 </head>
@@ -10,9 +13,12 @@
     <div ng-app="myApp" ng-controller="calculatorCtrl">
         <h2>Cashflow Calculator</h2>
 
-        Loan: <input type="double" ng-model="loan" value="100000">
-        Term: <input type="int" ng-model="term" value="360">
-        Rate: <input type="double" ng-model="rate" value=".04">
+        Loan: <input type="double" ng-model="loan.balance" value="100000">
+        Term: <input type="int" ng-model="loan.term" value="360">
+        Rate: <input type="double" ng-model="loan.rate" value=".04">
+
+        <button ng-click="getInterestPayment(loan.balance, loan.term, loan.rate)">Get Data</button>
+
 
         <table>
             <th>Month</th>
@@ -22,9 +28,8 @@
 
         </table>
         <table>
-            <tr ng-repeat="x in names">
+            <tr ng-repeat="x in loan">
                 <td>{{ x }}</td>
-
             </tr>
         </table>
 
@@ -32,18 +37,30 @@
 
     <script>
         var app = angular.module('myApp', []);
-        app.controller('calculatorCtrl', function ($scope) {
-            $scope.names = ["Joe", "Max", "Eric", "Kunsang"];
-            $scope.loans = [{
-                balance: "100000",
-                term: "360",
-                rate: ".04"
-            },
+        app.controller('calculatorCtrl', function ($scope, $http) {
+            $scope.loan = 
             {
                 balance: "200000",
                 term: "360",
                 rate: ".03"
-            }];
+            };
+
+            $scope.getInterestPayment = function () {
+
+                $http({
+                    method: "GET",
+                    url: '../loan/getInterestPayment/' + $scope.loan
+                }).then(function (data) {
+                    $scope.loan = [{ balance: data.balance, term: data.term, rate: data.rate }];
+                }, function (data) {
+                    $scope.loan = {
+                        balance: "",
+                        term: "",
+                        rate: ""
+                        };
+                        alert(data.statusText);
+                });
+            };
         });
     </script>
 
