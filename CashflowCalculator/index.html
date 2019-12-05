@@ -1,42 +1,66 @@
 ﻿<!DOCTYPE html>
-
-<html>
+<html lang="en">
 <head>
+    <meta charset="utf-8" />
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
     <script type="text/javascript" src="index.js"></script>
-    @model CashflowCalculator.Models.Loan
-    @{
-    ViewBag.Title = "index";
-    }
-    <meta charset="utf-8" />
-    <title>@ViewBag.Title</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+    <title>Cashflow Calculator</title>
 </head>
 <body>
     <div ng-app="myApp" ng-controller="calculatorCtrl">
         <h2>Cashflow Calculator</h2>
 
-        Loan: <input type="double" ng-model="loan.balance" value="100000">
-        Term: <input type="int" ng-model="loan.term" value="360">
-        Rate: <input type="double" ng-model="loan.rate" value=".04">
+        Loan: <input type="double" ng-model="loan.balance">
+        Term: <input type="int" ng-model="loan.term">
+        Rate: <input type="double" ng-model="loan.rate">
 
-        <button ng-click="getCashflow()" ng-model="loan.interest">View Cashflow</button>
+        <button ng-click="addLoan()" ng-model="loan.interest">Add Loan</button>
 
-        <table>
-            <tr>
-                <th>Month</th>
-                <th>Interest</th>
-                <th>Principal</th>
-                <th>RemBalance</th>
-            </tr>
-            <tr ng-repeat="y in cashflow">
-                <td>{{y.month}}</td>
-                <td>{{y.interest | currency}}</td>
-                <td>{{y.principal | currency}}</td>
-                <td>{{y.remBalance | currency}}</td>
 
-            </tr>
-        </table>
+        <div class="table-responsive">
 
+            <table class="table">
+                <tr>
+                    <th>Month</th>
+                    <th>Interest</th>
+                    <th>Principal</th>
+                    <th>RemBalance</th>
+                </tr>
+
+                <tr ng-repeat="row in aggregate">
+                    <td>{{row.month}}</td>
+                    <td>{{row.interest | currency}}</td>
+                    <td>{{row.principal | currency}}</td>
+                    <td>{{row.remBalance | currency}}</td>
+                </tr>
+            </table>
+        </div>
+
+
+        <div ng-repeat="cashflow in allCashflows" class="table-responsive">
+
+            <table class="table">
+                <tr>
+                    <th>Month</th>
+                    <th>Interest</th>
+                    <th>Principal</th>
+                    <th>RemBalance</th>
+                </tr>
+
+                <tr ng-repeat="row in cashflow">
+                    <td>{{row.month}}</td>
+                    <td>{{row.interest | currency}}</td>
+                    <td>{{row.principal | currency}}</td>
+                    <td>{{row.remBalance | currency}}</td>
+                </tr>
+            </table>
+        </div>
     </div>
 </body>
 </html>

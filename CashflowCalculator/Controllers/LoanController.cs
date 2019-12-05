@@ -18,23 +18,32 @@ namespace CashflowCalculator.Controllers
             return (balance) * (rate / 1200) / (1 - Math.Pow((1 + rate / 1200), (term * -1)));
         }
 
-
-        private double GetInterestPayment(double balance, int term, double rate)
-        {
-
-            Loan loan = new Loan();
-            loan.balance = balance;
-            loan.term = term;
-            loan.rate = rate;
-
-            return loan.balance * loan.rate / 1200;
-        }
-
-        [HttpGet]
-        public Row[] GetRow(double balance, int term, double rate)
+      [HttpGet]
+        public Row[][] GetRow(double balance, int term, double rate, Row[] aggregate)
         {
             //if (rate >= 1)
             //    rate /= 100;
+            int oldLength = 0;
+            if (aggregate == null)
+            {
+                aggregate = new Row[term];
+                for (int i = 0; i < term; i++)
+                    aggregate[i] = new Row();       
+            }
+            else if (aggregate.Length < term)
+            {
+                Row[] newAgg = new Row[term];
+                for (int i = 0; i < term; i++)
+                {
+                    
+                    if (i < aggregate.Length)
+                        newAgg[i] = new Row();
+                    else
+                        newAgg[i] = aggregate[i];
+                }
+                oldLength = aggregate.Length;
+                aggregate = newAgg;
+            }
 
             double totalMonthlyPayment = TotalMonthlyPayment(balance, term, rate);
             Row[] cashflow = new Row[term];
@@ -44,8 +53,14 @@ namespace CashflowCalculator.Controllers
             row.interest = balance * rate / 1200;
             row.principal = totalMonthlyPayment - row.interest;
             row.remBalance = balance - row.principal;
-      
             cashflow[0] = row;
+
+            //if (term > oldLength)
+            //    aggregate[0] = new Row();
+            aggregate[0].month = 1;
+            aggregate[0].interest += row.interest;
+            aggregate[0].principal += row.principal;
+            aggregate[0].remBalance += row.remBalance;
 
             for (int i = 1; i <= term - 1; i++)
             {
@@ -54,15 +69,18 @@ namespace CashflowCalculator.Controllers
                 row.interest = cashflow[i - 1].remBalance * rate / 1200; 
                 row.principal = totalMonthlyPayment - row.interest;
                 row.remBalance = cashflow[i - 1].remBalance - row.principal;
- /*               if (totalMonthlyPayment > row.remBalance)
-                {
-                    row.principal += row.remBalance;
-                    row.remBalance = 0;
-                }*/
                 cashflow[i] = row;
-            }
 
-            return cashflow;
+               // if (term > oldLength)
+             //       aggregate[i] = new Row();
+                aggregate[i].month = i + 1;
+                aggregate[i].interest += row.interest;
+                aggregate[i].principal += row.principal;
+                aggregate[i].remBalance += row.remBalance;
+            }
+            
+            Row[][] res = { cashflow, aggregate };
+            return res;
         }
 
 

@@ -6,30 +6,34 @@ app.controller('calculatorCtrl', function ($scope, $http) {
         return parseInt(num);
     }
 
-
+    $scope.allCashflows = [];
+    $scope.aggregate = null;
     $scope.loan =
         {
-            balance: '200000',
-            principal: '',
-            term: '24',
-            rate: '3',
-            interestPayment: ''
+            balance: '',
+            term: '',
+            rate: '',
         };
 
-   
-    $scope.getCashflow = function () {
-        $http({
-            method: "GET",
-            url: 'api/loan/GetRow/?balance=' + $scope.loan.balance + '&term=' + $scope.loan.term + '&rate=' + $scope.loan.rate
-        }).then(function (response) {
-            $scope.cashflow = response.data;
-        }, function (response) {
-            $scope.loan = {
-                'balance': "",
-                'term': "",
-                'rate': ""
-            };
-            alert(response.status);
-        });
-    };
+    $scope.addLoan = function () {
+        //     $scope.updateAggregate();
+        $http.get('api/loan/GetRow',
+            {
+                params: { balance: $scope.loan.balance, term: $scope.loan.term, rate: $scope.loan.rate, aggregate: $scope.aggregate}
+            }).then(function (response) {
+                //$scope.cashflow = response.data;
+                $scope.cashflow = response.data[0];
+                $scope.aggregate = response.data[1];
+                $scope.allCashflows.push($scope.cashflow);
+            }, function (response) {
+                alert("Invalid input");
+            });
+
+    
+
+        /*   $scope.updateAggregate = function () {
+               
+       
+           }*/
+    }
 });
