@@ -18,7 +18,6 @@ app.controller('calculatorCtrl', function ($scope, $http) {
 
    
     $scope.getCashflow = function () {
-        
         $http({
             method: "GET",
             url: 'api/loan/GetRow/?balance=' + $scope.loan.balance + '&term=' + $scope.loan.term + '&rate=' + $scope.loan.rate

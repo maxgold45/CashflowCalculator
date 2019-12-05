@@ -30,9 +30,9 @@
             </tr>
             <tr ng-repeat="y in cashflow">
                 <td>{{y.month}}</td>
-                <td>{{y.interest}}</td>
-                <td>{{y.principal}}</td>
-                <td>{{y.rem}}</td>
+                <td>{{y.interest | currency}}</td>
+                <td>{{y.principal | currency}}</td>
+                <td>{{y.remBalance | currency}}</td>
 
             </tr>
         </table>

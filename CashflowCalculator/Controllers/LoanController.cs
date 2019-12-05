@@ -54,6 +54,11 @@ namespace CashflowCalculator.Controllers
                 row.interest = cashflow[i - 1].remBalance * rate / 1200; 
                 row.principal = totalMonthlyPayment - row.interest;
                 row.remBalance = cashflow[i - 1].remBalance - row.principal;
+ /*               if (totalMonthlyPayment > row.remBalance)
+                {
+                    row.principal += row.remBalance;
+                    row.remBalance = 0;
+                }*/
                 cashflow[i] = row;
             }
 
