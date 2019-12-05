@@ -1,26 +1,36 @@
 ﻿var app = angular.module('myApp', []);
+
+
 app.controller('calculatorCtrl', function ($scope, $http) {
+    $scope.parseInt = function (num) {
+        return parseInt(num);
+    }
+
+
     $scope.loan =
         {
-            balance: "200000",
-            term: "360",
-            rate: ".03"
+            balance: '200000',
+            principal: '',
+            term: '24',
+            rate: '3',
+            interestPayment: ''
         };
 
-    $scope.getInterestPayment = function () {
-
+   
+    $scope.getCashflow = function () {
+        
         $http({
             method: "GET",
-            url: '../loan/getInterestPayment/' + $scope.loan
-        }).then(function (data) {
-            $scope.loan = [{ balance: data.balance, term: data.term, rate: data.rate }];
-        }, function (data) {
+            url: 'api/loan/GetRow/?balance=' + $scope.loan.balance + '&term=' + $scope.loan.term + '&rate=' + $scope.loan.rate
+        }).then(function (response) {
+            $scope.cashflow = response.data;
+        }, function (response) {
             $scope.loan = {
-                balance: "",
-                term: "",
-                rate: ""
+                'balance': "",
+                'term': "",
+                'rate': ""
             };
-            alert(data.statusText);
+            alert(response.status);
         });
     };
 });

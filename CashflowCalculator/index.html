@@ -9,7 +9,7 @@
     ViewBag.Title = "index";
     }
     <meta charset="utf-8" />
-    <title></title>
+    <title>@ViewBag.Title</title>
 </head>
 <body>
     <div ng-app="myApp" ng-controller="calculatorCtrl">
@@ -19,19 +19,21 @@
         Term: <input type="int" ng-model="loan.term" value="360">
         Rate: <input type="double" ng-model="loan.rate" value=".04">
 
-        <button ng-click="getInterestPayment(loan.balance, loan.term, loan.rate)">Get Data</button>
-
+        <button ng-click="getCashflow()" ng-model="loan.interest">View Cashflow</button>
 
         <table>
-            <th>Month</th>
-            <th>Interest</th>
-            <th>Principal</th>
-            <th>Rem Balance</th>
+            <tr>
+                <th>Month</th>
+                <th>Interest</th>
+                <th>Principal</th>
+                <th>RemBalance</th>
+            </tr>
+            <tr ng-repeat="y in cashflow">
+                <td>{{y.month}}</td>
+                <td>{{y.interest}}</td>
+                <td>{{y.principal}}</td>
+                <td>{{y.rem}}</td>
 
-        </table>
-        <table>
-            <tr ng-repeat="x in loan">
-                <td>{{ x }}</td>
             </tr>
         </table>
 
