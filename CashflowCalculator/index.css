@@ -18,7 +18,7 @@
     overflow-y: scroll;
     height: 300px;
 }
-
+    
 .fixed_header thead tr {
     display: block;
 }
