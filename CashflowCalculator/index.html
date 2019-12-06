@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
     <script type="text/javascript" src="index.js"></script>
+    <link rel="stylesheet" type="text/css" href="index.css">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
@@ -17,45 +18,119 @@
         <h2>Cashflow Calculator</h2>
 
         <form ng-submit="addLoan()">
-            Loan: <input type="number" ng-model="loan.balance" min="0" max="100000000000" required>
+            Loan: <input type="number" ng-model="loan.balance" min="0" max="1000000000000" required>
             Term: <input type="number" ng-model="loan.term" min="1" max="1200" step="1" required>
-            Rate: <input type="number" ng-model="loan.rate" min="0" max="100" required>
+            Rate: <input type="number" ng-model="loan.rate" min="1" max="100" required>
             <input type="submit" value="Add Loan">
         </form>
 
-        <div class="table-responsive">
-            <table class="table">
-                <tr>
-                    <th>Month</th>
-                    <th>Interest</th>
-                    <th>Principal</th>
-                    <th>RemBalance</th>
-                </tr>
-                <tr ng-repeat="row in aggregate">
-                    <td>{{row.month}}</td>
-                    <td>{{row.interest | currency}}</td>
-                    <td>{{row.principal | currency}}</td>
-                    <td>{{row.remBalance | currency}}</td>
-                </tr>
-            </table>
+
+      
+
+        <div ng-repeat="cashflow in allCashflows" ng-if="$index % 3 == 0" class="row">
+            <div class="col-xs-4 scroll-div" ng-if="allCashflows.length > ($index)">
+                <table class="table fixed_header">
+                    <caption>{{$index}}</caption>
+                    <thead>
+                        <tr>
+                            <th>Month</th>
+                            <th>Interest</th>
+                            <th>Principal</th>
+                            <th>RemBalance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="row in allCashflows[$index]">
+                            <td>{{row.month}}</td>
+                            <td>{{row.interest | currency}}</td>
+                            <td>{{row.principal | currency}}</td>
+                            <td>{{row.remBalance | currency}}</td>
+                        </tr>
+                    </tbody>
+                    
+                </table>
+            </div>
+            <div class="col-xs-4 scroll-div" ng-if="allCashflows.length > ($index + 1)">
+                <table class="table fixed_header">
+                    <caption>{{$index + 1}}</caption>
+                    <thead>
+                        <tr>
+                            <th>Month</th>
+                            <th>Interest</th>
+                            <th>Principal</th>
+                            <th>RemBalance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="row in allCashflows[$index+1]">
+                            <td>{{row.month}}</td>
+                            <td>{{row.interest | currency}}</td>
+                            <td>{{row.principal | currency}}</td>
+                            <td>{{row.remBalance | currency}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-xs-4 scroll-div" ng-if="allCashflows.length > ($index + 2)">
+                <table class="table fixed_header">
+                    <caption>{{$index + 2}}</caption>
+                    <thead>
+                        <tr>
+                            <th>Month</th>
+                            <th>Interest</th>
+                            <th>Principal</th>
+                            <th>RemBalance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="row in allCashflows[$index+2]">
+                            <td>{{row.month}}</td>
+                            <td>{{row.interest | currency}}</td>
+                            <td>{{row.principal | currency}}</td>
+                            <td>{{row.remBalance | currency}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+         
         </div>
 
-        <div ng-repeat="cashflow in allCashflows" class="table-responsive">
-            <table class="table">
-                <tr>
-                    <th>Month</th>
-                    <th>Interest</th>
-                    <th>Principal</th>
-                    <th>RemBalance</th>
-                </tr>
-                <tr ng-repeat="row in cashflow">
-                    <td>{{row.month}}</td>
-                    <td>{{row.interest | currency}}</td>
-                    <td>{{row.principal | currency}}</td>
-                    <td>{{row.remBalance | currency}}</td>
-                </tr>
-            </table>
-        </div>
+        <!--
+    <div class="table-responsive">
+        <table class="table">
+            <tr>
+                <th>Month</th>
+                <th>Interest</th>
+                <th>Principal</th>
+                <th>RemBalance</th>
+            </tr>
+            <tr ng-repeat="row in aggregate">
+                <td>{{row.month}}</td>
+                <td>{{row.interest | currency}}</td>
+                <td>{{row.principal | currency}}</td>
+                <td>{{row.remBalance | currency}}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div ng-repeat="cashflow in allCashflows" class="table-responsive">
+        <table class="table">
+            <tr>
+                <th>Month</th>
+                <th>Interest</th>
+                <th>Principal</th>
+                <th>RemBalance</th>
+            </tr>
+            <tr ng-repeat="row in cashflow">
+                <td>{{row.month}}</td>
+                <td>{{row.interest | currency}}</td>
+                <td>{{row.principal | currency}}</td>
+                <td>{{row.remBalance | currency}}</td>
+            </tr>
+        </table>
+    </div>
+
+        -->
     </div>
 </body>
 </html>

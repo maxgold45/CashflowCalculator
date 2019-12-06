@@ -15,19 +15,6 @@ app.controller('calculatorCtrl', function ($scope, $http) {
         };
 
     $scope.addLoan = function () {
-
-        // Post aggregate
-        /*if (aggregate != null) {
-            $http.post('api/loan/updateAggregate',
-                {
-                    var data = $.param({
-                        balance: $scope.loan.balance, term: $scope.loan.term, rate: $scope.loan.rate, aggregate: $scope.aggregate
-                                         
-                }
-            })
-        }*/
-        
-
         $http.post('api/loan/GetRow', $scope.aggregate,
             {
                 params: { balance: $scope.loan.balance, term: $scope.loan.term, rate: $scope.loan.rate}
