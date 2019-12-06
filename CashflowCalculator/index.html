@@ -27,7 +27,7 @@
 
       
 
-        <div ng-repeat="cashflow in allCashflows" ng-if="$index % 3 == 0" class="row">
+        <div ng-repeat="cashflow in allCashflows" ng-if="$index % 3 == 0" class="row" style="overflow:scroll">
             <div class="col-xs-4 scroll-div" ng-if="allCashflows.length > ($index)">
                 <table class="table fixed_header">
                     <caption>{{$index}}</caption>

@@ -1,4 +1,11 @@
-﻿
+﻿body {
+    padding: 20px 30px 50px 30px;
+}
+
+.scroll-div{
+    width:400px;
+}
+
 .fixed_header {
     width: 400px;
     table-layout: fixed;
