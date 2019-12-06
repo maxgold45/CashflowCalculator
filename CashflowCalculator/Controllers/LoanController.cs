@@ -12,13 +12,13 @@ namespace CashflowCalculator.Controllers
     public class LoanController : ApiController
     {
         // Original balance
-        [HttpGet]
+        
         private double TotalMonthlyPayment(double balance, int term, double rate)
         {
             return (balance) * (rate / 1200) / (1 - Math.Pow((1 + rate / 1200), (term * -1)));
         }
 
-      [HttpGet]
+      [HttpPost]
         public Row[][] GetRow(double balance, int term, double rate, Row[] aggregate)
         {
             //if (rate >= 1)
@@ -36,7 +36,7 @@ namespace CashflowCalculator.Controllers
                 for (int i = 0; i < term; i++)
                 {
                     
-                    if (i < aggregate.Length)
+                    if (i >= aggregate.Length)
                         newAgg[i] = new Row();
                     else
                         newAgg[i] = aggregate[i];
