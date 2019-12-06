@@ -16,22 +16,14 @@
     <div ng-app="myApp" ng-controller="calculatorCtrl">
         <h2>Cashflow Calculator</h2>
 
-
-
-        
-
-        <form ng-submit="addLoan()"> 
-            Loan: <input type="number" ng-model="loan.balance" id="currencyTextBox" required>
-            Term: <input type="text" ng-model="loan.term" id="currencyTextBox" required>
-            Rate: <input type="text" ng-model="loan.rate" id="currencyTextBox" required>
-
-
-            <input type="submit" value="Add Loan"/>
-         
+        <form ng-submit="addLoan()">
+            Loan: <input type="number" ng-model="loan.balance" min="0" max="100000000000" required>
+            Term: <input type="number" ng-model="loan.term" min="1" max="1200" step="1" required>
+            Rate: <input type="number" ng-model="loan.rate" min="0" max="100" required>
+            <input type="submit" value="Add Loan">
         </form>
 
         <div class="table-responsive">
-
             <table class="table">
                 <tr>
                     <th>Month</th>
@@ -39,7 +31,6 @@
                     <th>Principal</th>
                     <th>RemBalance</th>
                 </tr>
-
                 <tr ng-repeat="row in aggregate">
                     <td>{{row.month}}</td>
                     <td>{{row.interest | currency}}</td>
@@ -49,9 +40,7 @@
             </table>
         </div>
 
-
         <div ng-repeat="cashflow in allCashflows" class="table-responsive">
-
             <table class="table">
                 <tr>
                     <th>Month</th>
@@ -59,7 +48,6 @@
                     <th>Principal</th>
                     <th>RemBalance</th>
                 </tr>
-
                 <tr ng-repeat="row in cashflow">
                     <td>{{row.month}}</td>
                     <td>{{row.interest | currency}}</td>

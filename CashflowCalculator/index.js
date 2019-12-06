@@ -1,6 +1,4 @@
-﻿
-
-var app = angular.module('myApp', []);
+﻿var app = angular.module('myApp', []);
 
 app.controller('calculatorCtrl', function ($scope, $http) {
     $scope.parseInt = function (num) {
