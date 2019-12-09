@@ -46,4 +46,7 @@ app.controller('calculatorCtrl', function ($scope, $http) {
                 }
         );
     }
+    $scope.remove = function (array, index) {
+        array.splice(index, 1);
+    }
 });
