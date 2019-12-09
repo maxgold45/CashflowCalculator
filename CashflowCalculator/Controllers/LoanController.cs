@@ -21,8 +21,8 @@ namespace CashflowCalculator.Controllers
       [HttpPost]
         public Row[][] GetRow(double balance, int term, double rate, Row[] aggregate)
         {
-            //if (rate >= 1)
-            //    rate /= 100;
+            if (rate <= 1)
+                rate *= 100;
             int oldLength = 0;
             if (aggregate == null)
             {

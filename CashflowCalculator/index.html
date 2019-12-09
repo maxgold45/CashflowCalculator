@@ -60,7 +60,7 @@
             <div ng-repeat="cashflow in allCashflows" ng-if="$index % 4 == 0" class="row" ng-init="allCashflowsIndex = $index">
                 <div ng-repeat="i in [0,1,2,3]" class="col-xs-12 col-md-6 col-lg-3 scroll-div " ng-if="allCashflows.length > (allCashflowsIndex + i)">
                     <table class="table fixed_header">
-                        <caption>Loan {{allCashflowsIndex + i + 1}}</caption>
+                        <caption><strong>Loan {{allCashflowsIndex + i + 1}}</strong> Balance: {{ ::loan.balance }}, Term: {{::loan.term}}, Rate: {{::loan.rate}}. </caption>
                         <thead>
                             <tr>
                                 <th>Month</th>
