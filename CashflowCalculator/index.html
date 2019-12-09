@@ -61,7 +61,7 @@
                 <div ng-repeat="i in [0,1,2,3]" class="col-xs-12 col-md-6 col-lg-3 scroll-div " ng-if="allCashflows.length > (allCashflowsIndex + i)">
                     <table class="table fixed_header">
                         <caption>
-                            <strong>Loan {{allCashflowsIndex + i + 1}}</strong> Balance: {{ ::loan.balance }}, Term: {{ ::loan.term }}, Rate: {{ ::loan.rate }}
+                            <strong>Loan {{allCashflowsIndex + i + 1}}</strong> Balance: {{ ::loan.balance | currency }}, Term: {{ ::loan.term }}, Rate: {{ ::loan.rate }}
                             <form ng-submit="remove(allCashflows, allCashflowsIndex + i)" style="float:right;">
                                 <input type="submit" class="btn-danger" value="X">
                             </form>

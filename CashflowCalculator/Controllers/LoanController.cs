@@ -11,12 +11,6 @@ namespace CashflowCalculator.Controllers
 {
     public class LoanController : ApiController
     {
-        // Original balance
-
-        private double TotalMonthlyPayment(double balance, int term, double rate)
-        {
-            return (balance) * (rate / 1200) / (1 - Math.Pow((1 + rate / 1200), (term * -1)));
-        }
 
         [HttpPost]
         public int RemoveRow(Row[] allCashflows, int index, Row[] aggregate)
@@ -51,7 +45,7 @@ namespace CashflowCalculator.Controllers
                 aggregate = newAgg;
             }
 
-            double totalMonthlyPayment = TotalMonthlyPayment(balance, term, rate);
+            double totalMonthlyPayment = (balance) * (rate / 1200) / (1 - Math.Pow((1 + rate / 1200), (term * -1)));
             Row[] cashflow = new Row[term];
 
             Row row = new Row();
@@ -60,9 +54,7 @@ namespace CashflowCalculator.Controllers
             row.principal = totalMonthlyPayment - row.interest;
             row.remBalance = balance - row.principal;
             cashflow[0] = row;
-
-            //if (term > oldLength)
-            //    aggregate[0] = new Row();
+            
             aggregate[0].month = 1;
             aggregate[0].interest += row.interest;
             aggregate[0].principal += row.principal;
@@ -77,8 +69,6 @@ namespace CashflowCalculator.Controllers
                 row.remBalance = cashflow[i - 1].remBalance - row.principal;
                 cashflow[i] = row;
 
-                // if (term > oldLength)
-                //       aggregate[i] = new Row();
                 aggregate[i].month = i + 1;
                 aggregate[i].interest += row.interest;
                 aggregate[i].principal += row.principal;

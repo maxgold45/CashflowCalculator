@@ -1,10 +1,6 @@
 ﻿var app = angular.module('myApp', []);
 
 app.controller('calculatorCtrl', function ($scope, $http) {
-    $scope.parseInt = function (num) {
-        return parseInt(num);
-    }
-
     $scope.allCashflows = [];
     $scope.aggregate = null;
     $scope.loan =
