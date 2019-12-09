@@ -12,13 +12,19 @@ namespace CashflowCalculator.Controllers
     public class LoanController : ApiController
     {
         // Original balance
-        
+
         private double TotalMonthlyPayment(double balance, int term, double rate)
         {
             return (balance) * (rate / 1200) / (1 - Math.Pow((1 + rate / 1200), (term * -1)));
         }
 
-      [HttpPost]
+        [HttpPost]
+        public int RemoveRow(Row[] allCashflows, int index, Row[] aggregate)
+        {
+            return 91293;
+        }
+
+        [HttpPost]
         public Row[][] GetRow(double balance, int term, double rate, Row[] aggregate)
         {
             if (rate <= 1)
@@ -28,14 +34,14 @@ namespace CashflowCalculator.Controllers
             {
                 aggregate = new Row[term];
                 for (int i = 0; i < term; i++)
-                    aggregate[i] = new Row();       
+                    aggregate[i] = new Row();
             }
             else if (aggregate.Length < term)
             {
                 Row[] newAgg = new Row[term];
                 for (int i = 0; i < term; i++)
                 {
-                    
+
                     if (i >= aggregate.Length)
                         newAgg[i] = new Row();
                     else
@@ -66,23 +72,25 @@ namespace CashflowCalculator.Controllers
             {
                 row = new Row();
                 row.month = i + 1;
-                row.interest = cashflow[i - 1].remBalance * rate / 1200; 
+                row.interest = cashflow[i - 1].remBalance * rate / 1200;
                 row.principal = totalMonthlyPayment - row.interest;
                 row.remBalance = cashflow[i - 1].remBalance - row.principal;
                 cashflow[i] = row;
 
-               // if (term > oldLength)
-             //       aggregate[i] = new Row();
+                // if (term > oldLength)
+                //       aggregate[i] = new Row();
                 aggregate[i].month = i + 1;
                 aggregate[i].interest += row.interest;
                 aggregate[i].principal += row.principal;
                 aggregate[i].remBalance += row.remBalance;
             }
-            
+
             Row[][] res = { cashflow, aggregate };
             return res;
         }
-
-
     }
 }
+
+
+
+

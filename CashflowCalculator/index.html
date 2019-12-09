@@ -14,26 +14,27 @@
 <body>
     <div ng-app="myApp" ng-controller="calculatorCtrl">
         <h2>Cashflow Calculator</h2>
-        <div class="row">
-            <div class="form-group col-xs-3">
-                <form ng-submit="addLoan()">
-                    <div class="form-group">
-                        <label for="balance"> Balance: </label>
-                        <input type="number" class="form-control" ng-model="loan.balance" min="0" max="1000000000000" id="balance" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="term"> Term: </label>
-                        <input type="number" class="form-control" ng-model="loan.term" min="1" max="1200" step="1" id="term" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="rate"> Rate: </label>
-                        <input type="number" class="form-control" ng-model="loan.rate" min="0.000001" max="100" step="0.000001" id="rate" required>
-                    </div>
-                    <input type="submit" class="form-control" value="Add Loan">
-                </form>
-            </div>
-            <div class="col-xs-5">
-                <div class="table-responsive">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="form-group col-xs-3">
+                    <form ng-submit="addLoan()">
+                        <div class="form-group">
+                            <label for="balance"> Balance: </label>
+                            <input type="number" class="form-control" ng-model="loan.balance" min="0" max="1000000000000" id="balance" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="term"> Term: </label>
+                            <input type="number" class="form-control" ng-model="loan.term" min="1" max="1200" step="1" id="term" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="rate"> Rate: </label>
+                            <input type="number" class="form-control" ng-model="loan.rate" min="0.000001" max="100" step="0.000001" id="rate" required>
+                        </div>
+                        <input type="submit" class="form-control" value="Add Loan">
+                    </form>
+                </div>
+                <div class="col-xs-5">
                     <table class="table fixed_header">
                         <caption>Aggregate Table</caption>
                         <thead>
@@ -55,12 +56,16 @@
                     </table>
                 </div>
             </div>
-        </div>
-        <div class="container-fluid">
+            
             <div ng-repeat="cashflow in allCashflows" ng-if="$index % 4 == 0" class="row" ng-init="allCashflowsIndex = $index">
                 <div ng-repeat="i in [0,1,2,3]" class="col-xs-12 col-md-6 col-lg-3 scroll-div " ng-if="allCashflows.length > (allCashflowsIndex + i)">
                     <table class="table fixed_header">
-                        <caption><strong>Loan {{allCashflowsIndex + i + 1}}</strong> Balance: {{ ::loan.balance }}, Term: {{::loan.term}}, Rate: {{::loan.rate}}. </caption>
+                        <caption>
+                            <strong>Loan {{allCashflowsIndex + i + 1}}</strong> Balance: {{ ::loan.balance }}, Term: {{::loan.term}}, Rate: {{::loan.rate}}
+                            <form ng-submit="removeLoan(allCashflowsIndex + i)" style="float:right;">
+                                <input type="submit" class="btn-danger" value="X">
+                            </form>
+                        </caption>
                         <thead>
                             <tr>
                                 <th>Month</th>
@@ -68,6 +73,7 @@
                                 <th>Principal</th>
                                 <th>RemBalance</th>
                             </tr>
+
                         </thead>
                         <tbody>
                             <tr ng-repeat="row in allCashflows[allCashflowsIndex + i]">

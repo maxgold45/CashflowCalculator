@@ -25,8 +25,25 @@ app.controller('calculatorCtrl', function ($scope, $http) {
                 $scope.allCashflows.push($scope.cashflow);
             }, function (response) {
                 alert("Invalid input. " + $scope.loan.balance);
-                    alert(response.data);
-                    alert(response.statusText);
+                alert(response.data);
+                alert(response.statusText);
             });
+    }
+
+    $scope.removeLoan = function (index) {
+        $http.post('api/loan/RemoveRow', $scope.aggregate,
+            {
+                params: { allCashflows: $scope.allCashflows, index: index }
+            }).then(function (response) {
+                //$scope.cashflow = response.data;
+                alert(index);
+                alert(response.data);
+                $scope.allCashflows = response.data[0];
+                $scope.aggregate = response.data[1];
+            }, function (response) {
+                alert("Invalid input. Loan " + index);
+                alert(response.status + ' Data: ' + response.statusText );
+                }
+        );
     }
 });
