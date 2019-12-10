@@ -48,9 +48,11 @@ namespace CashflowCalculator.Controllers
             double totalMonthlyPayment = (balance) * (rate / 1200) / (1 - Math.Pow((1 + rate / 1200), (term * -1)));
             Row[] cashflow = new Row[term];
 
-            Row row = new Row();
-            row.month = 1;
-            row.interest = balance * rate / 1200;
+            Row row = new Row
+            {
+                month = 1,
+                interest = balance * rate / 1200
+            };
             row.principal = totalMonthlyPayment - row.interest;
             row.remBalance = balance - row.principal;
             cashflow[0] = row;
@@ -62,9 +64,11 @@ namespace CashflowCalculator.Controllers
 
             for (int i = 1; i <= term - 1; i++)
             {
-                row = new Row();
-                row.month = i + 1;
-                row.interest = cashflow[i - 1].remBalance * rate / 1200;
+                row = new Row
+                {
+                    month = i + 1,
+                    interest = cashflow[i - 1].remBalance * rate / 1200
+                };
                 row.principal = totalMonthlyPayment - row.interest;
                 row.remBalance = cashflow[i - 1].remBalance - row.principal;
                 cashflow[i] = row;
