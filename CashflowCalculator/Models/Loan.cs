@@ -16,5 +16,7 @@ namespace CashflowCalculator.Models
         public int Term { get; set; }
 
         public double Rate { get; set; }
+
+        public ICollection<CashflowRow> CashflowRows { get; set; }
     }
 }

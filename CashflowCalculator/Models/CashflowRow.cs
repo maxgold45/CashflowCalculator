@@ -20,6 +20,9 @@ namespace CashflowCalculator.Models
 
         public double RemainingBalance { get; set; }
 
+        [ForeignKey("LoanID")]
+        public int LoanID { get; set; }
+
         public Loan Loan { get; set; }
     }
 }

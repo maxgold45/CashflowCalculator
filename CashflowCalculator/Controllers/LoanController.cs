@@ -19,7 +19,7 @@ namespace CashflowCalculator.Controllers
         }
 
         [HttpPost]
-        public CashflowRow[][] GetRow(double balance, int term, double rate, CashflowRow[] aggregate)
+        public CashflowRow[][] GetRow(double principal, int term, double rate, CashflowRow[] aggregate)
         {
             if (rate <= 1)
                 rate *= 100;
@@ -45,16 +45,16 @@ namespace CashflowCalculator.Controllers
                 aggregate = newAgg;
             }
 
-            double totalMonthlyPayment = (balance) * (rate / 1200) / (1 - Math.Pow((1 + rate / 1200), (term * -1)));
+            double totalMonthlyPayment = (principal) * (rate / 1200) / (1 - Math.Pow((1 + rate / 1200), (term * -1)));
             CashflowRow[] cashflow = new CashflowRow[term];
 
             CashflowRow row = new CashflowRow
             {
                 Month = 1,
-                InterestPayment = balance * rate / 1200
+                InterestPayment = principal * rate / 1200
             };
             row.PrincipalPayment = totalMonthlyPayment - row.InterestPayment;
-            row.RemainingBalance = balance - row.PrincipalPayment;
+            row.RemainingBalance = principal - row.PrincipalPayment;
             cashflow[0] = row;
             
             aggregate[0].Month = 1;
