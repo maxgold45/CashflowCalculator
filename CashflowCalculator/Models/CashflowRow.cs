@@ -10,7 +10,7 @@ namespace CashflowCalculator.Models
     public class CashflowRow
     {
         [Key]
-        public int CashflowRowID { get; set; }
+        public int CashflowRowId { get; set; }
 
         public int Month { get; set; }
 
@@ -20,9 +20,7 @@ namespace CashflowCalculator.Models
 
         public double RemainingBalance { get; set; }
 
-        [ForeignKey("LoanID")]
-        public int LoanID { get; set; }
-
+        public int LoanId { get; set; }
         public Loan Loan { get; set; }
     }
 }

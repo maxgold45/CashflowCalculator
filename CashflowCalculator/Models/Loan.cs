@@ -9,7 +9,7 @@ namespace CashflowCalculator.Models
     public class Loan
     {
         [Key]
-        public int LoanID { get; set; }
+        public int LoanId { get; set; }
 
         public double Principal { get; set; }
 

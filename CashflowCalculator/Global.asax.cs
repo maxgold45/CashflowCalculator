@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
@@ -11,6 +12,7 @@ namespace CashflowCalculator
     {
         protected void Application_Start()
         {
+            Database.SetInitializer<CashflowsContext>(new DropCreateDatabaseIfModelChanges<CashflowsContext>());
             GlobalConfiguration.Configure(WebApiConfig.Register);
         }
     }
