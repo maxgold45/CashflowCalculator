@@ -47,10 +47,10 @@
                         </thead>
                         <tbody>
                             <tr ng-repeat="row in aggregate">
-                                <td>{{row.month}}</td>
-                                <td>{{row.interest | currency}}</td>
-                                <td>{{row.principal | currency}}</td>
-                                <td>{{row.remBalance | currency}}</td>
+                                <td>{{row.Month}}</td>
+                                <td>{{row.InterestPayment | currency}}</td>
+                                <td>{{row.PrincipalPayment | currency}}</td>
+                                <td>{{row.RemainingBalance | currency}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -77,10 +77,10 @@
                         </thead>
                         <tbody>
                             <tr ng-repeat="row in allCashflows[allCashflowsIndex + i]">
-                                <td>{{row.month}}</td>
-                                <td>{{row.interest | currency}}</td>
-                                <td>{{row.principal | currency}}</td>
-                                <td>{{row.remBalance | currency}}</td>
+                                <td>{{row.Month}}</td>
+                                <td>{{row.InterestPayment | currency}}</td>
+                                <td>{{row.PrincipalPayment | currency}}</td>
+                                <td>{{row.RemainingBalance | currency}}</td>
                             </tr>
                         </tbody>
                     </table>

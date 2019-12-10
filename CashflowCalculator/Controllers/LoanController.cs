@@ -13,31 +13,31 @@ namespace CashflowCalculator.Controllers
     {
 
         [HttpPost]
-        public int RemoveRow(Row[] allCashflows, int index, Row[] aggregate)
+        public int RemoveRow(CashflowRow[] allCashflows, int index, CashflowRow[] aggregate)
         {
             return 91293;
         }
 
         [HttpPost]
-        public Row[][] GetRow(double balance, int term, double rate, Row[] aggregate)
+        public CashflowRow[][] GetRow(double balance, int term, double rate, CashflowRow[] aggregate)
         {
             if (rate <= 1)
                 rate *= 100;
             int oldLength = 0;
             if (aggregate == null)
             {
-                aggregate = new Row[term];
+                aggregate = new CashflowRow[term];
                 for (int i = 0; i < term; i++)
-                    aggregate[i] = new Row();
+                    aggregate[i] = new CashflowRow();
             }
             else if (aggregate.Length < term)
             {
-                Row[] newAgg = new Row[term];
+                CashflowRow[] newAgg = new CashflowRow[term];
                 for (int i = 0; i < term; i++)
                 {
 
                     if (i >= aggregate.Length)
-                        newAgg[i] = new Row();
+                        newAgg[i] = new CashflowRow();
                     else
                         newAgg[i] = aggregate[i];
                 }
@@ -46,40 +46,40 @@ namespace CashflowCalculator.Controllers
             }
 
             double totalMonthlyPayment = (balance) * (rate / 1200) / (1 - Math.Pow((1 + rate / 1200), (term * -1)));
-            Row[] cashflow = new Row[term];
+            CashflowRow[] cashflow = new CashflowRow[term];
 
-            Row row = new Row
+            CashflowRow row = new CashflowRow
             {
-                month = 1,
-                interest = balance * rate / 1200
+                Month = 1,
+                InterestPayment = balance * rate / 1200
             };
-            row.principal = totalMonthlyPayment - row.interest;
-            row.remBalance = balance - row.principal;
+            row.PrincipalPayment = totalMonthlyPayment - row.InterestPayment;
+            row.RemainingBalance = balance - row.PrincipalPayment;
             cashflow[0] = row;
             
-            aggregate[0].month = 1;
-            aggregate[0].interest += row.interest;
-            aggregate[0].principal += row.principal;
-            aggregate[0].remBalance += row.remBalance;
+            aggregate[0].Month = 1;
+            aggregate[0].InterestPayment += row.InterestPayment;
+            aggregate[0].PrincipalPayment += row.PrincipalPayment;
+            aggregate[0].RemainingBalance += row.RemainingBalance;
 
             for (int i = 1; i <= term - 1; i++)
             {
-                row = new Row
+                row = new CashflowRow
                 {
-                    month = i + 1,
-                    interest = cashflow[i - 1].remBalance * rate / 1200
+                    Month = i + 1,
+                    InterestPayment = cashflow[i - 1].RemainingBalance * rate / 1200
                 };
-                row.principal = totalMonthlyPayment - row.interest;
-                row.remBalance = cashflow[i - 1].remBalance - row.principal;
+                row.PrincipalPayment = totalMonthlyPayment - row.InterestPayment;
+                row.RemainingBalance = cashflow[i - 1].RemainingBalance - row.PrincipalPayment;
                 cashflow[i] = row;
 
-                aggregate[i].month = i + 1;
-                aggregate[i].interest += row.interest;
-                aggregate[i].principal += row.principal;
-                aggregate[i].remBalance += row.remBalance;
+                aggregate[i].Month = i + 1;
+                aggregate[i].InterestPayment += row.InterestPayment;
+                aggregate[i].PrincipalPayment += row.PrincipalPayment;
+                aggregate[i].RemainingBalance += row.RemainingBalance;
             }
 
-            Row[][] res = { cashflow, aggregate };
+            CashflowRow[][] res = { cashflow, aggregate };
             return res;
         }
     }

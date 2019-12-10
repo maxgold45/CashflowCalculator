@@ -13,7 +13,7 @@ app.controller('calculatorCtrl', function ($scope, $http) {
     $scope.addLoan = function () {
         $http.post('api/loan/GetRow', $scope.aggregate,
             {
-                params: { balance: $scope.loan.balance, term: $scope.loan.term, rate: $scope.loan.rate}
+                params: { Principal: $scope.loan.balance, Term: $scope.loan.term, Rate: $scope.loan.rate}
             }).then(function (response) {
                 //$scope.cashflow = response.data;
                 $scope.cashflow = response.data[0];
