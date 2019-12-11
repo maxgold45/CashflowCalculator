@@ -12,7 +12,6 @@ namespace CashflowCalculator
     {
         protected void Application_Start()
         {
-            Database.SetInitializer<CashflowsContext>(new DropCreateDatabaseIfModelChanges<CashflowsContext>());
             GlobalConfiguration.Configure(WebApiConfig.Register);
         }
     }

@@ -18,7 +18,7 @@
 
             <div class="row">
                 <div class="form-group col-xs-3">
-                    <form ng-submit="addLoan()">
+                    <form ng-submit="addLoan(); getAllCashflows(); ">
                         <div class="form-group">
                             <label for="balance"> Balance: </label>
                             <input type="number" class="form-control" ng-model="loan.balance" min="0" max="1000000000000" id="balance" required>
@@ -57,12 +57,12 @@
                 </div>
             </div>
             
-            <div ng-repeat="cashflow in allCashflows" ng-if="$index % 4 == 0" class="row" ng-init="allCashflowsIndex = $index">
+            <div ng-repeat="cashflow in allCashflows " ng-if="$index % 4 == 0" class="row" ng-init="allCashflowsIndex = $index" >
                 <div ng-repeat="i in [0,1,2,3]" class="col-xs-12 col-md-6 col-lg-3 scroll-div " ng-if="allCashflows.length > (allCashflowsIndex + i)">
                     <table class="table fixed_header">
                         <caption>
-                            <strong>Loan {{allCashflowsIndex + i + 1}}</strong> Balance: {{ ::loan.balance | currency }}, Term: {{ ::loan.term }}, Rate: {{ ::loan.rate }}
-                            <form ng-submit="remove(allCashflows, allCashflowsIndex + i)" style="float:right;">
+                            <strong>Loan {{allCashflows[allCashflowsIndex + i].LoanId }} {{ allLoans[allCashflowsIndex + i].LoanId }}</strong> Balance: {{ allLoans[allCashflowsIndex + i].Principal | currency }}, Term: {{ allLoans[allCashflowsIndex + i].Term }}, Rate: {{ allLoans[allCashflowsIndex + i].Rate }}
+                            <form ng-submit="remove(allCashflows, allCashflowsIndex + i); getAllCashflows();" style="float:right;">
                                 <input type="submit" class="btn-danger" value="X">
                             </form>
                         </caption>
@@ -73,7 +73,6 @@
                                 <th>Principal</th>
                                 <th>RemBalance</th>
                             </tr>
-
                         </thead>
                         <tbody>
                             <tr ng-repeat="row in allCashflows[allCashflowsIndex + i]">
@@ -85,6 +84,7 @@
                         </tbody>
                     </table>
                 </div>
+
             </div>
         </div>
     </div>

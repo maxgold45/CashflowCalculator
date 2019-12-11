@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using CashflowCalculator.Models;
 using CashflowCalculator;
-
+using System.Data.SqlClient;
 
 namespace CashflowCalculator.Controllers
 {
@@ -20,9 +20,23 @@ namespace CashflowCalculator.Controllers
             return 91293;
         }
 
-        [HttpPost]
 
-        public void GetRow(double principal, int term, double rate, CashflowRow[] aggregate)
+        [HttpGet]
+        public List<Loan> GetAllLoans()
+        {
+            List<Loan> loans = context.Loans.SqlQuery("SELECT * FROM dbo.Loans ORDER BY LoanId ASC").ToList();
+            return loans;
+        }
+
+        [HttpGet]
+        public List<CashflowRow> GetCashflowRows(int LoanId)
+        {
+            List<CashflowRow> cashflow = context.CashflowRows.SqlQuery("SELECT * FROM dbo.CashflowRows WHERE LoanId = @id", new SqlParameter("id", LoanId)).ToList(); 
+            return cashflow;
+        }
+
+        [HttpPost]
+        public void AddLoan(double principal, int term, double rate, CashflowRow[] aggregate)
         {
             var loan = new Loan { Principal = principal, Term = term, Rate = rate };
             context.Loans.Add(loan);
@@ -57,7 +71,6 @@ namespace CashflowCalculator.Controllers
                 context.CashflowRows.Add(row);
             }
             context.SaveChanges();
-
         }
     }
 }
@@ -65,7 +78,7 @@ namespace CashflowCalculator.Controllers
 
 
 
-////public CashflowRow[][] GetRow(double principal, int term, double rate, CashflowRow[] aggregate)
+////public CashflowRow[][] AddLoan(double principal, int term, double rate, CashflowRow[] aggregate)
 ////        {   
 
 ////            if (rate <= 1)
