@@ -7,6 +7,7 @@ using System.Web.Http;
 using CashflowCalculator.Models;
 using CashflowCalculator;
 using System.Data.SqlClient;
+using CashflowCalculator.DTOs;
 
 namespace CashflowCalculator.Controllers
 {
@@ -14,10 +15,11 @@ namespace CashflowCalculator.Controllers
     {
         public CashflowsContext context = new CashflowsContext();
 
-        [HttpPost]
-        public int RemoveRow(CashflowRow[] allCashflows, int index, CashflowRow[] aggregate)
+        [HttpDelete]
+        public void RemoveLoan(int index)
         {
-            return 91293;
+            context.Loans.Remove(context.Loans.Single(a => a.LoanId == index));
+            context.SaveChanges();
         }
 
 
@@ -33,18 +35,20 @@ namespace CashflowCalculator.Controllers
         public List<CashflowRow> GetCashflowRows(int LoanId)
         {
             //List<CashflowRow> cashflow = context.CashflowRows.SqlQuery("SELECT * FROM dbo.CashflowRows WHERE LoanId = @id", new SqlParameter("id", LoanId)).ToList(); 
-            List<CashflowRow> cashflow = context.CashflowRows.Where(x => x.LoanId == LoanId).ToList();
+            List<CashflowRow> cashflow = context.CashflowRows.Where(x => x.LoanId == LoanId).OrderBy(x => x.Month).ToList();
             return cashflow;
         }
 
         [HttpPost]
-        public void AddLoan(double principal, int term, double rate, CashflowRow[] aggregate)
+        public void AddLoan(Loan inputLoan)
         {
-            var loan = new Loan { Principal = principal, Term = term, Rate = rate };
-            context.Loans.Add(loan);
-
+            double principal = inputLoan.Principal;
+            double rate = inputLoan.Rate;
+            int term = inputLoan.Term;
             if (rate <= 1)
                 rate *= 100;
+
+            context.Loans.Add(new Loan { Principal = inputLoan.Principal, Term = inputLoan.Term, Rate = inputLoan.Rate });
 
             double totalMonthlyPayment = (principal) * (rate / 1200) / (1 - Math.Pow((1 + rate / 1200), (term * -1)));
             CashflowRow[] cashflow = new CashflowRow[term];
@@ -74,6 +78,43 @@ namespace CashflowCalculator.Controllers
             }
             context.SaveChanges();
         }
+
+        
+        [HttpGet]
+        public List<AggregateCashflowRowDTO> GetAggregate()
+        {
+
+            List<AggregateCashflowRowDTO> aggregate =
+                context
+                .CashflowRows
+                .GroupBy(x => x.Month)
+                .AsEnumerable()
+                .Select(grouping => new AggregateCashflowRowDTO()
+                {
+                    Month = grouping.Key,
+                    PrincipalPayment = grouping.Sum(row => row.PrincipalPayment),
+                    InterestPayment = grouping.Sum(row => row.InterestPayment),
+                    RemainingBalance = grouping.Sum(row => row.RemainingBalance)
+                })
+                .ToList();
+
+
+            //var aggregate = context.CashflowRows.GroupBy(o => o.Month)
+            //       .Select(g => new {
+            //           membername = g.Key,
+            //           total = g.Sum(i => i.PrincipalPayment)
+            //       }).ToList();
+
+
+
+            //List<CashflowRow> aggregate = context.CashflowRows.SqlQuery(
+            //"SELECT Month as x, (PrincipalPayment + InterestPayment) AS Sum " +
+            //"FROM dbo.CashflowRows " +
+            //"GROUP BY Month").ToList();
+
+            return aggregate;
+        }
+
     }
 }
 

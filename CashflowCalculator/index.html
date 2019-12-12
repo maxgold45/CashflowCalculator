@@ -13,12 +13,14 @@
 </head>
 <body>
     <div ng-app="myApp" ng-controller="calculatorCtrl">
-        <h2>Cashflow Calculator</h2>
         <div class="container-fluid">
-
+            <div class="row">
+                <h2 class="col-xs-3">Cashflow Calculator</h2>
+                <h3 class="col-xs-5">Aggregate Table</h3>
+            </div>
             <div class="row">
                 <div class="form-group col-xs-3">
-                    <form ng-submit="addLoan(); getAllCashflows(); ">
+                    <form ng-submit="addLoan(); ">
                         <div class="form-group">
                             <label for="balance"> Balance: </label>
                             <input type="number" class="form-control" ng-model="loan.balance" min="0" max="1000000000000" id="balance" required>
@@ -36,13 +38,12 @@
                 </div>
                 <div class="col-xs-5">
                     <table class="table fixed_header">
-                        <caption>Aggregate Table</caption>
                         <thead>
                             <tr>
                                 <th>Month</th>
                                 <th>Interest</th>
                                 <th>Principal</th>
-                                <th>RemBalance</th>
+                                <th>Remaining Balance</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -61,8 +62,8 @@
                 <div ng-repeat="i in [0,1,2,3]" class="col-xs-12 col-md-6 col-lg-3 scroll-div " ng-if="allLoans.length > (loanIndex + i)">
                     <table class="table fixed_header">
                         <caption>
-                            <strong>Loan {{ allLoans[loanIndex + i].LoanId }}</strong> Balance: {{ allLoans[loanIndex + i].Principal | currency }}, Term: {{ allLoans[loanIndex + i].Term }}, Rate: {{ allLoans[loanIndex + i].Rate }}
-                            <form ng-submit="remove(allCashflows, loanIndex + i); getAllCashflows();" style="float:right;">
+                            <strong>Loan {{ loanIndex + i + 1}}</strong> Balance: {{ allLoans[loanIndex + i].Principal | currency }}, Term: {{ allLoans[loanIndex + i].Term }}, Rate: {{ allLoans[loanIndex + i].Rate }}
+                            <form ng-submit="removeLoan(allLoans[loanIndex + i].LoanId)" style="float:right;">
                                 <input type="submit" class="btn-danger" value="X">
                             </form>
                         </caption>
@@ -71,11 +72,11 @@
                                 <th>Month</th>
                                 <th>Interest</th>
                                 <th>Principal</th>
-                                <th>RemBalance</th>
+                                <th>Balance</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="row in allLoans[loanIndex + i].CashflowRows">
+                            <tr ng-repeat="row in allLoans[loanIndex + i].CashflowRows | orderBy: 'Month'">
                                 <td>{{row.Month}}</td>
                                 <td>{{row.InterestPayment | currency}}</td>
                                 <td>{{row.PrincipalPayment | currency}}</td>
