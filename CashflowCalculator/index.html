@@ -33,7 +33,7 @@
                             <label for="rate"> Rate: </label>
                             <input type="number" class="form-control" ng-model="loan.rate" min="0.000001" max="100" step="0.000001" id="rate" required>
                         </div>
-                        <input type="submit" class="form-control" value="Add Loan">
+                        <input type="submit" ng-disabled="addable" class="form-control" value="Add Loan">
                     </form>
                 </div>
                 <div class="col-xs-5">
@@ -63,7 +63,7 @@
                     <table class="table fixed_header">
                         <caption>
                             <strong>Loan {{ loanIndex + i + 1}}</strong> Balance: {{ allLoans[loanIndex + i].Principal | currency }}, Term: {{ allLoans[loanIndex + i].Term }}, Rate: {{ allLoans[loanIndex + i].Rate }}
-                            <form ng-submit="removeLoan(allLoans[loanIndex + i].LoanId)" style="float:right;">
+                            <form ng-submit="removeLoan(allLoans[loanIndex + i].LoanId); allLoans.splice(loanIndex + i, 1);" style="float:right;">
                                 <input type="submit" class="btn-danger" value="X">
                             </form>
                         </caption>

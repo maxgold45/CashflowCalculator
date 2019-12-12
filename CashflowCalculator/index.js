@@ -5,6 +5,7 @@
 app.controller('calculatorCtrl', function ($scope, $http) {
     $scope.allLoans = [];
     $scope.aggregate = [];
+    $scope.addable = false;
     $scope.loan =
         {
             balance: '',
@@ -16,7 +17,6 @@ app.controller('calculatorCtrl', function ($scope, $http) {
         $scope.getAllCashflows();
         $scope.getAggregate();
     }
-
     $scope.getAllCashflows = function () {
         $scope.allLoans = [];
         $http.get('api/loan/GetAllLoans'
@@ -28,27 +28,28 @@ app.controller('calculatorCtrl', function ($scope, $http) {
             });
         $scope.getAggregate();
     }
-
-    
     $scope.getAggregate = function () {
         $scope.aggregate = [];
         $http.get('api/loan/GetAggregate'
         ).then(function (response) {
             $scope.aggregate = response.data;
         }, function (response) {
-            //alert(response.status);
-            //alert('getAggregate');
+            alert("Aggregate failed. " + response.status);
         });
     }
-
     $scope.addLoan = function () {
+        $scope.addable = true;
         var params = { Principal: $scope.loan.balance, Term: $scope.loan.term, Rate: $scope.loan.rate }
         $http.post('api/loan/AddLoan', params).then(function (response) {
-            $scope.getAllCashflows();
-            }, function (response) {
+            $scope.allLoans.push(response.data);
+            $scope.getAggregate();
+            $scope.addable = false;
+            $scope.loan.balance = "";
+            $scope.loan.term = "";
+            $scope.loan.rate = "";
+        }, function (response) {
+                $scope.addable = false;
                 alert("Invalid input. " + $scope.loan.balance);
-                alert(response.data);
-                alert(response.statusText);
             });
     }
 
@@ -57,32 +58,11 @@ app.controller('calculatorCtrl', function ($scope, $http) {
             {
                 params: { index: index }
             }).then(function (response) {
-                $scope.getAllCashflows();
+                $scope.getAggregate();
             }, function (response) {
                 alert("Invalid delete. Loan " + index);
                 alert(response.status + ' Data: ' + response.statusText);
             }
             );
     }
-
-   
-
-    $scope.getCashflow = function (loanId) {
-        $http.get('api/loan/GetCashflowRows',
-            {
-                params: { LoanId: loanId }
-            }).then(function (innerResponse) {
-                $scope.allCashflows.push(response.data);
-            }, function (innerResponse) {
-                alert('fail');
-            });
-    }
-
-
-
-    $scope.sorterFunc = function (loan) {
-        return parseInt(loan.LoanId);
-    };
-
-
 });
