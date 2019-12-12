@@ -24,14 +24,16 @@ namespace CashflowCalculator.Controllers
         [HttpGet]
         public List<Loan> GetAllLoans()
         {
-            List<Loan> loans = context.Loans.SqlQuery("SELECT * FROM dbo.Loans ORDER BY LoanId ASC").ToList();
+            List<Loan> loans = context.Loans.Include("CashflowRows").OrderBy(x => x.LoanId).ToList();
             return loans;
         }
+
 
         [HttpGet]
         public List<CashflowRow> GetCashflowRows(int LoanId)
         {
-            List<CashflowRow> cashflow = context.CashflowRows.SqlQuery("SELECT * FROM dbo.CashflowRows WHERE LoanId = @id", new SqlParameter("id", LoanId)).ToList(); 
+            //List<CashflowRow> cashflow = context.CashflowRows.SqlQuery("SELECT * FROM dbo.CashflowRows WHERE LoanId = @id", new SqlParameter("id", LoanId)).ToList(); 
+            List<CashflowRow> cashflow = context.CashflowRows.Where(x => x.LoanId == LoanId).ToList();
             return cashflow;
         }
 

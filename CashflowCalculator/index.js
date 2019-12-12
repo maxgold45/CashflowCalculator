@@ -3,7 +3,6 @@
 
 
 app.controller('calculatorCtrl', function ($scope, $http) {
-    $scope.allCashflows = [];
     $scope.allLoans = [];
 
     $scope.aggregate = null;
@@ -34,25 +33,16 @@ app.controller('calculatorCtrl', function ($scope, $http) {
     }
 
     $scope.getAllCashflows = function () {
-        $scope.allCashflows = [];
         $scope.allLoans = [];
         $http.get('api/loan/GetAllLoans'
         ).then(function (response) {
-            for (var i = 0; i < response.data.length; i++){
-                $scope.allLoans.push(response.data[i]);
-                $http.get('api/loan/GetCashflowRows',
-                    {
-                        params: { LoanId: response.data[i].LoanId }
-                    }).then(function (innerResponse) {
-                        $scope.allCashflows.push(innerResponse.data);
-                    }, function (innerResponse) {
-                            alert('fail');
-                    });
-            }
+            $scope.allLoans = response.data;
+           
         }, function (response) {
-                alert("Not In Here!");
+                alert(response.status);
+                alert('getallloans');
+        });
 
-            });
     }
 
     $scope.getCashflow = function (loanId) {
@@ -87,6 +77,9 @@ app.controller('calculatorCtrl', function ($scope, $http) {
         array.splice(index, 1);
     }
 
+    $scope.sorterFunc = function (loan) {
+        return parseInt(loan.LoanId);
+    };
 
 
 });

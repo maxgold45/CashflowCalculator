@@ -57,12 +57,12 @@
                 </div>
             </div>
             
-            <div ng-repeat="cashflow in allCashflows " ng-if="$index % 4 == 0" class="row" ng-init="allCashflowsIndex = $index" >
-                <div ng-repeat="i in [0,1,2,3]" class="col-xs-12 col-md-6 col-lg-3 scroll-div " ng-if="allCashflows.length > (allCashflowsIndex + i)">
+            <div ng-repeat="loan in allLoans" ng-if="$index % 4 == 0" class="row" ng-init="loanIndex = $index" >
+                <div ng-repeat="i in [0,1,2,3]" class="col-xs-12 col-md-6 col-lg-3 scroll-div " ng-if="allLoans.length > (loanIndex + i)">
                     <table class="table fixed_header">
                         <caption>
-                            <strong>Loan {{allCashflows[allCashflowsIndex + i].LoanId }} {{ allLoans[allCashflowsIndex + i].LoanId }}</strong> Balance: {{ allLoans[allCashflowsIndex + i].Principal | currency }}, Term: {{ allLoans[allCashflowsIndex + i].Term }}, Rate: {{ allLoans[allCashflowsIndex + i].Rate }}
-                            <form ng-submit="remove(allCashflows, allCashflowsIndex + i); getAllCashflows();" style="float:right;">
+                            <strong>Loan {{ allLoans[loanIndex + i].LoanId }}</strong> Balance: {{ allLoans[loanIndex + i].Principal | currency }}, Term: {{ allLoans[loanIndex + i].Term }}, Rate: {{ allLoans[loanIndex + i].Rate }}
+                            <form ng-submit="remove(allCashflows, loanIndex + i); getAllCashflows();" style="float:right;">
                                 <input type="submit" class="btn-danger" value="X">
                             </form>
                         </caption>
@@ -75,7 +75,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="row in allCashflows[allCashflowsIndex + i]">
+                            <tr ng-repeat="row in allLoans[loanIndex + i].CashflowRows">
                                 <td>{{row.Month}}</td>
                                 <td>{{row.InterestPayment | currency}}</td>
                                 <td>{{row.PrincipalPayment | currency}}</td>
