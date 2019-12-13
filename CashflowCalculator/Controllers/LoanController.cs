@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using CashflowCalculator.Models;
-using CashflowCalculator;
-using System.Data.SqlClient;
 using CashflowCalculator.DTOs;
 
 namespace CashflowCalculator.Controllers
@@ -15,14 +11,8 @@ namespace CashflowCalculator.Controllers
     {
         public CashflowsContext context = new CashflowsContext();
 
-        [HttpDelete]
-        public void RemoveLoan(int index)
-        {
-            context.Loans.Remove(context.Loans.Single(a => a.LoanId == index));
-            context.SaveChanges();
-        }
 
-
+        /// <returns>Returns a List of all Loans in the database.</returns>
         [HttpGet]
         public List<Loan> GetAllLoans()
         {
@@ -30,6 +20,32 @@ namespace CashflowCalculator.Controllers
             return loans;
         }
 
+        /// <returns>Returns the aggregate table as a list of AggregateCashflowRows. The DTO only shows what the table needs in the view.</returns>
+        [HttpGet]
+        public List<AggregateCashflowRowDTO> GetAggregate()
+        {
+            List<AggregateCashflowRowDTO> aggregate =
+                context
+                .CashflowRows
+                .GroupBy(x => x.Month)
+                .AsEnumerable()
+                .Select(grouping => new AggregateCashflowRowDTO()
+                {
+                    Month = grouping.Key,
+                    PrincipalPayment = grouping.Sum(row => row.PrincipalPayment),
+                    InterestPayment = grouping.Sum(row => row.InterestPayment),
+                    RemainingBalance = grouping.Sum(row => row.RemainingBalance)
+                })
+                .ToList();
+
+            return aggregate;
+        }
+
+        /// <summary>
+        /// Adds inputLoan to the database and creates the cashflow associated with it.
+        /// </summary>
+        /// <param name="inputLoan">Contains a principal, rate, and term.</param>
+        /// <returns>The Loan object associated withh inputLoan.</returns>
         [HttpPost]
         public Loan AddLoan(Loan inputLoan)
         {
@@ -69,31 +85,16 @@ namespace CashflowCalculator.Controllers
             }
             context.SaveChanges();
 
-
             return result;
         }
 
-        
-        [HttpGet]
-        public List<AggregateCashflowRowDTO> GetAggregate()
+
+        /// <param name="loanId">Removes the loan with this id from the database.</param>
+        [HttpDelete]
+        public void RemoveLoan(int loanId)
         {
-
-            List<AggregateCashflowRowDTO> aggregate =
-                context
-                .CashflowRows
-                .GroupBy(x => x.Month)
-                .AsEnumerable()
-                .Select(grouping => new AggregateCashflowRowDTO()
-                {
-                    Month = grouping.Key,
-                    PrincipalPayment = grouping.Sum(row => row.PrincipalPayment),
-                    InterestPayment = grouping.Sum(row => row.InterestPayment),
-                    RemainingBalance = grouping.Sum(row => row.RemainingBalance)
-                })
-                .ToList();
-
-            return aggregate;
+            context.Loans.Remove(context.Loans.Single(a => a.LoanId == loanId));
+            context.SaveChanges();
         }
-
     }
 }

@@ -1,11 +1,7 @@
 ﻿var app = angular.module('myApp', []);
 
-
-
 app.controller('calculatorCtrl', function ($scope, $http) {
-    $scope.allLoans = [];
-    $scope.aggregate = [];
-    $scope.addable = false;
+
     $scope.loan =
         {
             balance: '',
@@ -13,23 +9,41 @@ app.controller('calculatorCtrl', function ($scope, $http) {
             rate: '',
         };
 
+    $scope.allLoans = [];
+    $scope.aggregate = [];
+
+    $scope.addable = true;
+    $scope.removable = true;
+    
+
+    /**
+     * Populates the cashflows and aggregate tables on startup.
+     * */
     window.onload = function () {
-        $scope.getAllCashflows();
+        $scope.getAllLoans();
         $scope.getAggregate();
     }
-    $scope.getAllCashflows = function () {
-        $scope.allLoans = [];
+
+    /**
+     * Sets allLoans to contain all loans in the database.
+     * 
+     * This method should only be called when the page is loaded.
+     * */
+    $scope.getAllLoans = function () {
         $http.get('api/loan/GetAllLoans'
         ).then(function (response) {
             $scope.allLoans = response.data;
         }, function (response) {
-            alert(response.status);
-            alert('getallloans');
-            });
-        $scope.getAggregate();
+            alert("Get all loans failed. " + response.status);
+        });
     }
+
+    /**
+     * Sets aggregate to contain the aggregate of all loans in the database.
+     *
+     * This method should be called when the page is loaded, or when loans are added or removed.
+     * */
     $scope.getAggregate = function () {
-        $scope.aggregate = [];
         $http.get('api/loan/GetAggregate'
         ).then(function (response) {
             $scope.aggregate = response.data;
@@ -37,32 +51,54 @@ app.controller('calculatorCtrl', function ($scope, $http) {
             alert("Aggregate failed. " + response.status);
         });
     }
+
+    /**
+     * Adds the current loan to the database. Disables the button after it is pressed, then
+     *     enables it after the loan is added to the database. It also updates aggregate.
+     * 
+     * This method does not call getAllLoans(). Instead, it will just add the new loan object
+     *     into allLoans.
+     * 
+     * This method should be called when the Add Loan button is pressed.
+     * */
     $scope.addLoan = function () {
-        $scope.addable = true;
+        $scope.addable = false;
         var params = { Principal: $scope.loan.balance, Term: $scope.loan.term, Rate: $scope.loan.rate }
+        $scope.loan.balance = "";
+        $scope.loan.term = "";
+        $scope.loan.rate = "";
         $http.post('api/loan/AddLoan', params).then(function (response) {
             $scope.allLoans.push(response.data);
             $scope.getAggregate();
-            $scope.addable = false;
-            $scope.loan.balance = "";
-            $scope.loan.term = "";
-            $scope.loan.rate = "";
+            $scope.addable = true;
         }, function (response) {
-                $scope.addable = false;
-                alert("Invalid input. " + $scope.loan.balance);
-            });
+            alert("Invalid input. " + response.status);
+            $scope.addable = true;
+        });
     }
 
-    $scope.removeLoan = function (index) {
+    /**
+    * Removes the selected loan from the database given its id. It also removes the loan from allLoans given its index. It
+    *     disables all remove buttons until the loan is successfully removed from the database. It also updates aggregate.
+    *
+    * This method does not call getAllLoans(). Instead, it will just remove the loan object
+    *     from allLoans.
+    *
+    * This method should be called when any Remove Loan button is pressed.
+    * */
+    $scope.removeLoan = function (id, index) {
+        $scope.removable = false;
         $http.delete('api/loan/RemoveLoan',
             {
-                params: { index: index }
+                params: { loanId: id }
             }).then(function (response) {
+                $scope.allLoans.splice(index, 1);
                 $scope.getAggregate();
+                $scope.removable = true;
             }, function (response) {
-                alert("Invalid delete. Loan " + index);
-                alert(response.status + ' Data: ' + response.statusText);
+                alert("Delete failed. " + response.status);
+                $scope.removable = true;
             }
-            );
+        );
     }
 });
