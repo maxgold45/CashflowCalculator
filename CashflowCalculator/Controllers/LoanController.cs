@@ -52,7 +52,7 @@ namespace CashflowCalculator.Controllers
             double principal = inputLoan.Principal;
             double rate = inputLoan.Rate;
             int term = inputLoan.Term;
-            if (rate <= 1)
+            if (rate < 1)
                 rate *= 100;
 
             Loan result = context.Loans.Add(new Loan { Principal = inputLoan.Principal, Term = inputLoan.Term, Rate = inputLoan.Rate });
